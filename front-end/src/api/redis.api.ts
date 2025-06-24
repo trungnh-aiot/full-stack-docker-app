@@ -17,7 +17,7 @@ export const fetchAllKeys = async (): Promise<Record<string, string>> => {
         value: string;
       }>;
       newEntries[k] = valData.data?.value ?? "(null)";
-    })
+    }),
   );
 
   return newEntries;

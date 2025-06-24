@@ -28,6 +28,7 @@ const eslintConfig = [
       "*.log",
       "*.d.ts",
       "**/postcss.config.mjs",
+      "**/*.config.*",
     ],
   },
   // ✅ Base configs: recommended & recommendedTypeChecked
