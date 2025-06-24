@@ -1,11 +1,12 @@
 // index.js (or app.js)
-import express from "express";
 import cors from "cors";
+import express from "express";
+
+import { PORT } from "./constants/env.constants.js";
 import { ROUTES } from "./constants/routes.constants.js";
 import counterRouter from "./routes/counter.routes.js";
 import noteRouter from "./routes/note.routes.js";
 import redisRouter from "./routes/redis.routes.js";
-import { PORT } from "./constants/env.constants.js";
 
 const app = express();
 

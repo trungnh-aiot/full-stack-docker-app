@@ -1,23 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BACK_END_URL } from "@/constants/env.constants";
+import { useEffect, useState } from "react";
 
-interface Note {
-  id: string;
-  content: string;
-}
+import { fetchNotes } from "@/api/note.api";
+import { BACK_END_URL } from "@/constants/env.constants";
+import { Note } from "@/type/note.type";
 
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [content, setContent] = useState("");
   const [editingNote, setEditingNote] = useState<Note | null>(null);
 
-  const fetchNotes = async () => {
-    const res = await fetch(`${BACK_END_URL}/api/notes`);
-    const data = await res.json();
-    setNotes(data.data);
+  const handleFetchNotes = async () => {
+    const data = await fetchNotes();
+    setNotes(data);
   };
 
   const handleSubmit = async () => {
@@ -36,12 +33,12 @@ export default function NotesPage() {
       });
     }
     setContent("");
-    fetchNotes();
+    await handleFetchNotes();
   };
 
   const handleDelete = async (id: string) => {
     await fetch(`${BACK_END_URL}/api/notes/${id}`, { method: "DELETE" });
-    fetchNotes();
+    await handleFetchNotes();
   };
 
   const handleEdit = (note: Note) => {
@@ -50,9 +47,9 @@ export default function NotesPage() {
   };
 
   useEffect(() => {
-    fetchNotes();
+    void handleFetchNotes();
   }, []);
-  console.log("Notes data:", notes);
+
   return (
     <main className="p-6 space-y-4">
       <h1 className="text-xl font-bold">Quản lý ghi chú</h1>

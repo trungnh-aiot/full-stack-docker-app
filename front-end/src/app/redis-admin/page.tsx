@@ -1,8 +1,10 @@
 "use client";
 
-import { BACK_END_URL } from "@/constants/env.constants";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import { fetchAllKeys } from "@/api/redis.api";
+import { BACK_END_URL } from "@/constants/env.constants";
 
 const API_BASE = `${BACK_END_URL}/api/redis`;
 
@@ -12,25 +14,11 @@ export default function RedisAdmin() {
   const [entries, setEntries] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
 
-  const fetchAllKeys = async () => {
+  const handleFetchAllKeys = async () => {
     try {
-      const res = await fetch(`${API_BASE}/keys`);
-      const data = await res.json();
+      const res = await fetchAllKeys();
 
-      const keys: string[] = data.data || [];
-      const newEntries: Record<string, string> = {};
-
-      await Promise.all(
-        keys.map(async (k) => {
-          const resVal = await fetch(
-            `${API_BASE}/keys/${encodeURIComponent(k)}`
-          );
-          const valData = await resVal.json();
-          newEntries[k] = valData.data?.value || "(null)";
-        })
-      );
-
-      setEntries(newEntries);
+      setEntries(res);
     } catch (error) {
       console.error("Lỗi khi load Redis keys:", error);
     }
@@ -38,16 +26,16 @@ export default function RedisAdmin() {
 
   const handleAdd = async () => {
     try {
-      const res = await fetch(`${API_BASE}/`, {
+      await fetch(`${API_BASE}/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key, value }),
       });
-      const data = await res.json();
-      setMessage(data.message || "Thêm thành công");
+
+      setMessage("Thêm thành công");
       setKey("");
       setValue("");
-      fetchAllKeys();
+      handleFetchAllKeys();
     } catch (err) {
       console.error(err);
     }
@@ -55,22 +43,19 @@ export default function RedisAdmin() {
 
   const handleDelete = async (keyToDelete: string) => {
     try {
-      const res = await fetch(
-        `${API_BASE}/keys/${encodeURIComponent(keyToDelete)}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await res.json();
-      setMessage(data.message || "Đã xoá key");
-      fetchAllKeys();
+      await fetch(`${API_BASE}/keys/${encodeURIComponent(keyToDelete)}`, {
+        method: "DELETE",
+      });
+
+      setMessage("Đã xoá key");
+      handleFetchAllKeys();
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchAllKeys();
+    handleFetchAllKeys();
   }, []);
 
   return (

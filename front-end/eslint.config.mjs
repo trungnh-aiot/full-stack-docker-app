@@ -27,6 +27,7 @@ const eslintConfig = [
       "coverage/**/*",
       "*.log",
       "*.d.ts",
+      "**/postcss.config.mjs",
     ],
   },
   // ✅ Base configs: recommended & recommendedTypeChecked
@@ -68,8 +69,9 @@ const eslintConfig = [
       "simple-import-sort/exports": "error",
 
       "@typescript-eslint/no-unused-vars": "error",
-      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-floating-promises": "warn",
       "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/no-misused-promises": "off",
     },
     settings: {
       next: {

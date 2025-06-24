@@ -12,13 +12,13 @@ export class NoteService {
   updateNote = async (note) => {
     try {
       console.log("Updating note with content:", note);
-      updateNote = await prisma.note.update({
+      const updateNoter = await prisma.note.update({
         where: { id: note.id },
         data: {
           content: note.content,
         },
       });
-      return updateNote;
+      return updateNoter;
     } catch (error) {
       console.error("Error update note:", error);
       throw error;
@@ -40,7 +40,7 @@ export class NoteService {
   deleteNote = async (id) => {
     try {
       const deletedNote = await prisma.note.delete({
-        where: { id: id },
+        where: { id },
       });
       return deletedNote;
     } catch (error) {

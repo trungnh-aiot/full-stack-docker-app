@@ -1,18 +1,25 @@
 import js from "@eslint/js";
-import globals from "globals";
 import { defineConfig } from "eslint/config";
 import prettier from "eslint-config-prettier";
 import eslintPluginPrettier from "eslint-plugin-prettier";
 import eslintPluginSimpleImportSort from "eslint-plugin-simple-import-sort";
+import globals from "globals";
 
 export default defineConfig([
   // Base JS rules
   js.configs.recommended,
-
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/prisma/**",
+      "**/dist/**",
+      "**/.env",
+      "src/generated/prisma/**",
+    ],
+  },
   // For JS files
   {
     files: ["**/*.{js,mjs,cjs}"],
-    ignores: ["**/node_modules/**", "**/prisma/**", "**/dist/**", "**/.env"],
     languageOptions: {
       globals: {
         ...globals.node,

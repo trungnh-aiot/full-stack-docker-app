@@ -51,6 +51,6 @@ uploads/
 
 /src/generated/prisma
 
-/.vscode
-
 /prisma
+
+.gitignore

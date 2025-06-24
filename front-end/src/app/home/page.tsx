@@ -1,18 +1,21 @@
 "use client";
-import Counter from "@/components/home/counter";
-import { BACK_END_URL } from "@/constants/env.constants";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
+import { fetchCounter } from "@/api/page.api";
+import Counter from "@/components/home/counter";
 
 export default function Home() {
   const [counter, setCounter] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    fetch(`${BACK_END_URL}/api/counter`)
-      .then((res) => res.json())
+    fetchCounter()
       .then((data) => {
-        console.log("Counter data:", data);
-        setCounter(data.data.count);
+        setCounter(data.count);
+        setLoading(false);
+      })
+      .catch(() => {
         setLoading(false);
       });
   }, []);

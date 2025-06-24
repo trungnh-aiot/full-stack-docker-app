@@ -41,7 +41,7 @@ export class CounterService {
   getCounter = async (id) => {
     try {
       const counter = await prisma.counter.findUnique({
-        where: { id: id },
+        where: { id },
       });
       return counter;
     } catch (error) {

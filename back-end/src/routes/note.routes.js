@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { ROUTES } from "../constants/routes.constants.js";
 import { getNoteController } from "../controller/note.controller.js";
 

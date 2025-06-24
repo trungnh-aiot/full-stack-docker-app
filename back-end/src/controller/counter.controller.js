@@ -22,7 +22,7 @@ export class CounterController {
       fromRedisCounter = parseInt(fromRedisCounter);
       if (fromRedisCounter) {
         const updatedCounter = await this.counterService.updateCounter(
-          ++fromRedisCounter
+          ++fromRedisCounter,
         );
         await this.redisService.saveValue("counter", updatedCounter.count);
         return res.status(200).json({
@@ -37,9 +37,7 @@ export class CounterController {
           count: 0,
         };
       } else {
-        const updatedCounter = await this.counterService.updateCounter(
-          fromDbCounter.count + 1
-        );
+        await this.counterService.updateCounter(fromDbCounter.count + 1);
       }
       await this.redisService.saveValue("counter", fromDbCounter.count + 1);
       return res.status(200).json({

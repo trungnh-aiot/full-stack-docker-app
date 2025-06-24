@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { getRedisController } from "../controller/redis.controller.js";
+
 import { ROUTES } from "../constants/routes.constants.js";
+import { getRedisController } from "../controller/redis.controller.js";
 
 const redisRouter = Router();
 const redisController = getRedisController();
