@@ -1,0 +1,93 @@
+name: Fullstack CI/CD with Cache
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Cache backend node_modules
+        uses: actions/cache@v3
+        with:
+          path: back-end/node_modules
+          key: backend-${{ runner.os }}-node-${{ hashFiles('back-end/package-lock.json') }}
+          restore-keys: |
+            backend-${{ runner.os }}-node-
+
+      - name: Install backend dependencies
+        working-directory: back-end
+        run: npm ci
+
+      - name: Run backend lint + prettier
+        working-directory: back-end
+        run: |
+          npm run lint
+          npm run prettier
+
+      - name: Cache frontend node_modules
+        uses: actions/cache@v3
+        with:
+          path: front-end/node_modules
+          key: frontend-${{ runner.os }}-node-${{ hashFiles('front-end/package-lock.json') }}
+          restore-keys: |
+            frontend-${{ runner.os }}-node-
+
+      - name: Install frontend dependencies
+        working-directory: front-end
+        run: npm ci
+
+      - name: Run frontend lint + prettier
+        working-directory: front-end
+        run: |
+          npm run lint
+          npm run prettier
+
+      # ----------------------------
+      # Docker Build & Deploy
+      # ----------------------------
+      - name: Build backend Docker image
+        run: docker build -t trung2k20801/my-fullstack-backend:latest ./back-end
+
+      - name: Build frontend Docker image
+        run: docker build -t trung2k20801/my-fullstack-frontend:latest ./front-end
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Push backend Docker image
+        run: docker push trung2k20801/my-fullstack-backend:latest
+
+      - name: Push frontend Docker image
+        run: docker push trung2k20801/my-fullstack-frontend:latest
+
+      - name: Pull backend Docker image
+        run: docker pull trung2k20801/my-fullstack-backend:latest
+
+      - name: Pull frontend Docker image
+        run: docker pull trung2k20801/my-fullstack-frontend:latest
+
+      - name: Stop and remove old containers
+        run: docker compose down
+
+      - name: Start new containers
+        run: docker compose up -d
+
+      - name: Clean up old images
+        run: docker image prune -f
