@@ -42,7 +42,7 @@ const eslintConfig = [
           tsconfigRootDir: __dirname,
         },
       },
-    }
+    },
   ),
 
   // ✅ Compat config for Next.js, Prettier, import sort, etc.
