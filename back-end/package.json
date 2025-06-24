@@ -5,7 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --legacy-watch src/index.js",
-    "start": "prisma generate && prisma migrate deploy && node src/index.js"
+    "start": "prisma generate && prisma migrate deploy && node src/index.js",
+    "lint": "eslint src --ext .js",
+    "lint:fix": "eslint src --ext .js --fix",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write ."
   },
   "type": "module",
   "author": "",
@@ -17,5 +21,13 @@
     "prisma": "^6.10.1",
     "redis": "^5.5.6"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.2.0"
+  }
 }
