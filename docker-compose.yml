@@ -1,0 +1,42 @@
+services:
+  frontend:
+    image: trung2k20801/my-fullstack-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_BACK_END_URL: http://backend:3001/api
+    depends_on:
+      - backend
+  backend:
+    image: trung2k20801/my-fullstack-backend:latest
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+      - cache
+    environment:
+      DATABASE_URL: mysql://root:rootpass@db:3306/mydb
+      REDIS_URL: redis://cache:6379
+      FRONT_END_URL: http://frontend:3000
+      PORT: 3001
+
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootpass"
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  cache:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./back-end/src/configs/.redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+volumes:
+  mysql_data:
