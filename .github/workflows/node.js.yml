@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-
+    environment: production
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
@@ -63,8 +63,11 @@ jobs:
       # Docker Build & Deploy
       # ----------------------------
       - name: Build backend Docker image
-        run: docker build -t trung2k20801/my-fullstack-backend:latest ./back-end
-
+        run: |
+          docker build \
+          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+          -t trung2k20801/my-fullstack-backend:latest ./back-end
+      
       - name: Build frontend Docker image
         run: docker build -t trung2k20801/my-fullstack-frontend:latest ./front-end
 
@@ -84,7 +87,7 @@ jobs:
         run: docker pull trung2k20801/my-fullstack-frontend:latest
 
       - name: Stop and remove old containers
-        run: docker compose down
+        run: docker compose down || true
 
       - name: Start new containers
         run: docker compose up -d

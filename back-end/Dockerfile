@@ -13,10 +13,11 @@ RUN npm install --only=production
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
+ARG DATABASE_URL
+
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN npx prisma generate
 
 # Expose cổng backend đang chạy
 EXPOSE 3001
-
-# Lệnh chạy app
-CMD ["npm", "start"]

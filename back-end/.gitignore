@@ -51,6 +51,5 @@ uploads/
 
 /src/generated/prisma
 
-/prisma
 
 .gitignore
