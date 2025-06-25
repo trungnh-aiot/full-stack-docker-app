@@ -13,11 +13,9 @@ RUN npm install --only=production
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
-ARG DATABASE_URL
-
-ENV DATABASE_URL=$DATABASE_URL
-
-RUN npx prisma generate
+RUN npx prisma generate && npx prisma migrate deploy
 
 # Expose cổng backend đang chạy
 EXPOSE 3001
+
+CMD [ "npm","start" ]

@@ -62,10 +62,17 @@ jobs:
       # ----------------------------
       # Docker Build & Deploy
       # ----------------------------
+      - name: Setup environment variables
+        run: |
+          echo "DATABASE_URL= ${{ vars.DATABASE_URL }}" >> ./back-end/.env
+          echo "REDIS_URL=${{ vars.REDIS_URL }}" >> ./back-end/.env
+          echo "FRONT_END_URL=${{ vars.FRONT_END_URL }}" >> ./back-end/.env
+          echo "PORT= ${{ vars.PORT }}" >> ./back-end/.env
+          echo "NEXT_PUBLIC_BACK_END_URL= ${{vars.NEXT_PUBLIC_BACK_END_URL}}" >> ./front-end/.env
+     
       - name: Build backend Docker image
         run: |
           docker build \
-          --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
           -t trung2k20801/my-fullstack-backend:latest ./back-end
       
       - name: Build frontend Docker image

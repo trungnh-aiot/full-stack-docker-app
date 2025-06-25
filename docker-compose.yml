@@ -19,7 +19,6 @@ services:
       REDIS_URL: redis://cache:6379
       FRONT_END_URL: http://frontend:3000
       PORT: 3001
-    command: sh -c "npx prisma migrate deploy && npm start"  
 
   db:
     image: mysql:8.0
