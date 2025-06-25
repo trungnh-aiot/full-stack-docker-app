@@ -13,9 +13,7 @@ RUN npm install --only=production
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
-RUN npx prisma generate && npx prisma migrate deploy
+RUN npx prisma generate
 
 # Expose cổng backend đang chạy
 EXPOSE 3001
-
-CMD [ "npm","start" ]
