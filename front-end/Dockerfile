@@ -1,24 +1,31 @@
-FROM node:18-alpine AS builder
+# Base dependencies
+FROM node:18-alpine AS base
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# Build stage
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
 RUN npm run build
 
-FROM node:18-alpine
+# Production image
+FROM node:18-alpine AS production
 
 WORKDIR /app
-COPY --from=builder /app/package*.json ./
-RUN npm install --production
 
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
+COPY --from=build /app/public ./public
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
 
 EXPOSE 3000
 
-ENV NODE_ENV=production
-
-CMD ["npx", "next", "start"]
+CMD ["node", "server.js"]
