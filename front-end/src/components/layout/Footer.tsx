@@ -32,8 +32,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-text-secondary text-sm mb-4 leading-relaxed">
-              Curated gift boxes for every occasion. Where memories come alive
-              through thoughtfully selected treasures.
+              Hộp quà tuyển chọn cho mọi dịp. Nơi những kỷ niệm sống động qua những món quà ý nghĩa.
             </p>
             {/* Social Links */}
             <div className="flex gap-3">
@@ -74,15 +73,15 @@ export function Footer() {
           {/* Shop Links */}
           <div>
             <h4 className="font-display font-semibold text-text-primary mb-4">
-              Shop
+              Cửa Hàng
             </h4>
             <ul className="space-y-3">
               {[
-                { label: "All Gift Boxes", href: "/boxes" },
-                { label: "Bundle Deals", href: "/bundles" },
-                { label: "Subscriptions", href: "/subscriptions" },
-                { label: "Budget-Friendly", href: "/boxes?budget=under50" },
-                { label: "New Arrivals", href: "/boxes?sort=newest" },
+                { label: "Tất Cả Hộp Quà", href: "/boxes" },
+                { label: "Combo Khuyến Mãi", href: "/bundles" },
+                { label: "Gói Định Kỳ", href: "/subscriptions" },
+                { label: "Giá Tiết Kiệm", href: "/boxes?budget=under50" },
+                { label: "Mới Về", href: "/boxes?sort=newest" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -99,15 +98,15 @@ export function Footer() {
           {/* Occasions */}
           <div>
             <h4 className="font-display font-semibold text-text-primary mb-4">
-              By Occasion
+              Theo Dịp
             </h4>
             <ul className="space-y-3">
               {[
-                { label: "Birthday", href: "/occasions/birthday" },
-                { label: "Anniversary", href: "/occasions/anniversary" },
-                { label: "Thank You", href: "/occasions/thank-you" },
-                { label: "Get Well", href: "/occasions/get-well" },
-                { label: "Just Because", href: "/occasions/just-because" },
+                { label: "Sinh Nhật", href: "/occasions/birthday" },
+                { label: "Kỷ Niệm", href: "/occasions/anniversary" },
+                { label: "Cảm Ơn", href: "/occasions/thank-you" },
+                { label: "Chúc Sức Khỏe", href: "/occasions/get-well" },
+                { label: "Ngẫu Hứng", href: "/occasions/just-because" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -124,15 +123,15 @@ export function Footer() {
           {/* Support & Trust */}
           <div>
             <h4 className="font-display font-semibold text-text-primary mb-4">
-              Support
+              Hỗ Trợ
             </h4>
             <ul className="space-y-3">
               {[
-                { label: "Contact Us", href: "/contact" },
-                { label: "FAQs", href: "/faq" },
-                { label: "Shipping Info", href: "/shipping" },
-                { label: "Returns", href: "/returns" },
-                { label: "Track Order", href: "/track" },
+                { label: "Liên Hệ", href: "/contact" },
+                { label: "Câu Hỏi Thường Gặp", href: "/faq" },
+                { label: "Thông Tin Vận Chuyển", href: "/shipping" },
+                { label: "Đổi Trả", href: "/returns" },
+                { label: "Tra Cứu Đơn Hàng", href: "/track" },
               ].map((link) => (
                 <li key={link.href}>
                   <Link
@@ -165,7 +164,7 @@ export function Footer() {
                   d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
                 />
               </svg>
-              Free U.S. Shipping on $100+
+              Miễn Phí Vận Chuyển Toàn Quốc
             </div>
             {/* Secure Checkout */}
             <div className="flex items-center gap-2 text-sm text-text-secondary">
@@ -182,7 +181,7 @@ export function Footer() {
                   d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                 />
               </svg>
-              Secure Checkout
+              Thanh Toán An Toàn
             </div>
             {/* Quality Guarantee */}
             <div className="flex items-center gap-2 text-sm text-text-secondary">
@@ -199,7 +198,7 @@ export function Footer() {
                   d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                 />
               </svg>
-              Quality Guarantee
+              Đảm Bảo Chất Lượng
             </div>
           </div>
 
@@ -222,19 +221,19 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="bg-background-secondary py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-text-muted">
-          <p>© {currentYear} GiftBox Pro. All rights reserved.</p>
+          <p>© {currentYear} GiftBox Pro. Bảo lưu mọi quyền.</p>
           <div className="flex gap-4">
             <Link
               href="/privacy"
               className="hover:text-primary transition-colors"
             >
-              Privacy Policy
+              Chính Sách Bảo Mật
             </Link>
             <Link
               href="/terms"
               className="hover:text-primary transition-colors"
             >
-              Terms of Service
+              Điều Khoản Dịch Vụ
             </Link>
           </div>
         </div>

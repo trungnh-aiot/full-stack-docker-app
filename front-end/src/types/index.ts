@@ -153,3 +153,41 @@ export interface PaginatedResponse<T> {
   limit: number;
   totalPages: number;
 }
+
+// Digital Gift Types
+export interface QuizConfig {
+  question: string;
+  answer: string;
+}
+
+export interface MemoryElement {
+  id: string;
+  type: "text" | "image" | "sticker";
+  content: string;
+  position: { x: number; y: number };
+  size?: { width: number; height: number };
+  style?: Record<string, string | number>;
+  rotation?: number;
+}
+
+export interface MemoryConfig {
+  images: string[];
+  message: string;
+  theme: "romantic" | "fun" | "simple";
+  music?: string;
+  elements?: MemoryElement[];
+  bgImage?: string;
+}
+
+export interface DigitalGift {
+  id: string;
+  quiz: QuizConfig;
+  memory: MemoryConfig;
+  createdAt: string;
+}
+
+export enum MemoryBuilderType {
+  QUIZZ = "quiz",
+  MEMORY = "memory",
+  FINISH = "finish"
+}

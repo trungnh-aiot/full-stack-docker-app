@@ -47,36 +47,42 @@ export function Header({
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden xl:flex items-center gap-6">
               <Link
                 href="/box-builder"
                 className="text-primary hover:text-primary-dark transition-colors font-semibold"
               >
-                Build Your Box
+                Tự Thiết Kế
+              </Link>
+              <Link
+                href="/memory-builder"
+                className="text-text-secondary hover:text-primary transition-colors font-medium"
+              >
+                Kỷ Niệm Số
               </Link>
               <Link
                 href="/boxes"
                 className="text-text-secondary hover:text-primary transition-colors font-medium"
               >
-                Gift Boxes
+                Hộp Quà
               </Link>
               <Link
                 href="/bundles"
                 className="text-text-secondary hover:text-primary transition-colors font-medium"
               >
-                Bundles
+                Combo
               </Link>
               <Link
                 href="/subscriptions"
                 className="text-text-secondary hover:text-primary transition-colors font-medium"
               >
-                Subscribe
+                Định Kỳ
               </Link>
               <Link
                 href="/occasions"
                 className="text-text-secondary hover:text-primary transition-colors font-medium"
               >
-                By Occasion
+                Theo Dịp
               </Link>
             </div>
 
@@ -86,7 +92,7 @@ export function Header({
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
                 className="p-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors cursor-pointer"
-                aria-label="Search"
+                aria-label="Tìm kiếm"
               >
                 <svg
                   className="w-5 h-5"
@@ -122,25 +128,25 @@ export function Header({
                       href="/account"
                       className="block px-4 py-2 text-sm text-text-secondary hover:text-primary hover:bg-background-secondary rounded-t-xl"
                     >
-                      My Account
+                      Tài Khoản
                     </Link>
                     <Link
                       href="/orders"
                       className="block px-4 py-2 text-sm text-text-secondary hover:text-primary hover:bg-background-secondary"
                     >
-                      My Orders
+                      Đơn Hàng
                     </Link>
                     {isAdmin && (
                       <Link
                         href="/admin"
                         className="block px-4 py-2 text-sm text-primary font-medium hover:bg-primary/10"
                       >
-                        Admin Dashboard
+                        Quản Trị
                       </Link>
                     )}
                     <hr className="border-border" />
                     <button className="w-full text-left px-4 py-2 text-sm text-error hover:bg-error/10 rounded-b-xl cursor-pointer">
-                      Sign Out
+                      Đăng Xuất
                     </button>
                   </div>
                 </div>
@@ -162,7 +168,7 @@ export function Header({
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     />
                   </svg>
-                  Sign In
+                  Đăng Nhập
                 </Link>
               )}
 
@@ -194,7 +200,7 @@ export function Header({
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors cursor-pointer"
+                className="xl:hidden p-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors cursor-pointer"
                 aria-label="Menu"
               >
                 <svg
@@ -229,7 +235,7 @@ export function Header({
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Search gift boxes, bundles, occasions..."
+                  placeholder="Tìm kiếm hộp quà, combo, dịp..."
                   className="w-full px-4 py-3 pl-12 border border-border rounded-xl bg-background-secondary focus:outline-none focus:ring-2 focus:ring-primary"
                   autoFocus
                 />
@@ -252,44 +258,50 @@ export function Header({
 
           {/* Mobile Menu */}
           {isMenuOpen && (
-            <div className="md:hidden pb-4">
+            <div className="xl:hidden pb-4">
               <div className="flex flex-col gap-2">
                 <Link
                   href="/box-builder"
                   className="px-4 py-2 text-primary hover:bg-background-secondary rounded-lg transition-colors font-semibold"
                 >
-                  Build Your Box
+                  Tự Thiết Kế
+                </Link>
+                <Link
+                  href="/memory-builder"
+                  className="px-4 py-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors font-medium"
+                >
+                  Kỷ Niệm Số
                 </Link>
                 <Link
                   href="/boxes"
                   className="px-4 py-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors"
                 >
-                  Gift Boxes
+                  Hộp Quà
                 </Link>
                 <Link
                   href="/bundles"
                   className="px-4 py-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors"
                 >
-                  Bundles
+                  Combo
                 </Link>
                 <Link
                   href="/subscriptions"
                   className="px-4 py-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors"
                 >
-                  Subscribe
+                  Định Kỳ
                 </Link>
                 <Link
                   href="/occasions"
                   className="px-4 py-2 text-text-secondary hover:text-primary hover:bg-background-secondary rounded-lg transition-colors"
                 >
-                  By Occasion
+                  Theo Dịp
                 </Link>
                 {!isLoggedIn && (
                   <Link
                     href="/login"
                     className="px-4 py-2 bg-primary text-white rounded-lg text-center font-medium"
                   >
-                    Sign In
+                    Đăng Nhập
                   </Link>
                 )}
               </div>
