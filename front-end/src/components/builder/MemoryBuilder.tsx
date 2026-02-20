@@ -99,46 +99,50 @@ export function MemoryBuilder() {
     }
 
     return (
-        <div className="w-full">
-            {/* Stepper */}
-            <div className="flex justify-center mb-12">
-                <div className="flex items-center space-x-4">
-                    <div
-                        className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step === MemoryBuilderType.QUIZZ
-                            ? "bg-rose-600 text-white"
-                            : "bg-rose-100 text-rose-600"
-                            }`}
-                    >
-                        1
-                    </div>
-                    <div className="w-16 h-1 bg-gray-200">
+        <div className="w-full h-full flex flex-col overflow-hidden">
+            {/* Stepper - Only show in QUIZZ step for a cleaner builder experience */}
+            {step === MemoryBuilderType.QUIZZ && (
+                <div className="flex justify-center my-12 shrink-0">
+                    <div className="flex items-center space-x-4">
                         <div
-                            className={`h-full bg-rose-600 transition-all ${step === MemoryBuilderType.QUIZZ ? "w-0" : "w-full"
+                            className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step === MemoryBuilderType.QUIZZ
+                                ? "bg-rose-600 text-white"
+                                : "bg-rose-100 text-rose-600"
                                 }`}
-                        />
-                    </div>
-                    <div
-                        className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step2Active
-                            ? "bg-rose-600 text-white"
-                            : "bg-gray-200 text-gray-500"
-                            }`}
-                    >
-                        2
+                        >
+                            1
+                        </div>
+                        <div className="w-16 h-1 bg-gray-200">
+                            <div
+                                className={`h-full bg-rose-600 transition-all ${step === MemoryBuilderType.QUIZZ ? "w-0" : "w-full"
+                                    }`}
+                            />
+                        </div>
+                        <div
+                            className={`flex items-center justify-center w-10 h-10 rounded-full font-bold ${step2Active
+                                ? "bg-rose-600 text-white"
+                                : "bg-gray-200 text-gray-500"
+                                }`}
+                        >
+                            2
+                        </div>
                     </div>
                 </div>
+            )}
+
+            <div className="flex-1 min-h-0 flex flex-col">
+                {step === MemoryBuilderType.QUIZZ && (
+                    <QuizStep initialData={quizData || undefined} onNext={handleQuizNext} />
+                )}
+
+                {step === MemoryBuilderType.MEMORY && (
+                    <MemoryStep
+                        initialData={memoryData || undefined}
+                        onNext={handleMemoryNext}
+                        onBack={handleBack}
+                    />
+                )}
             </div>
-
-            {step === MemoryBuilderType.QUIZZ && (
-                <QuizStep initialData={quizData || undefined} onNext={handleQuizNext} />
-            )}
-
-            {step === MemoryBuilderType.MEMORY && (
-                <MemoryStep
-                    initialData={memoryData || undefined}
-                    onNext={handleMemoryNext}
-                    onBack={handleBack}
-                />
-            )}
         </div>
     );
 }

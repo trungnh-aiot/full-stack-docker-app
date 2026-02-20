@@ -36,9 +36,13 @@ export function MemoryStep({ initialData, onNext, onBack }: MemoryStepProps) {
         return (
             <div className="max-w-4xl mx-auto py-12">
                 <div className="text-center mb-12">
-                    {/* ... Keep the existing mode selection UI ... */}
-                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Thiết Kế Kỷ Niệm Của Bạn</h2>
-                    <p className="text-lg text-gray-600">Bạn muốn bắt đầu như thế nào?</p>
+                    <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                        Tạo Kỷ Niệm Số
+                    </h1>
+                    <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                        Thiết kế một trải nghiệm số độc đáo, an toàn cho người thương.
+                        Họ sẽ cần trả lời câu hỏi bí mật của bạn để mở khóa kỷ niệm.
+                    </p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
                     {/* Option 1: Blank Canvas */}
@@ -66,103 +70,17 @@ export function MemoryStep({ initialData, onNext, onBack }: MemoryStepProps) {
     }
 
     return (
-        <div className="flex-1 flex overflow-hidden h-[calc(100vh-140px)]">
-            {/* 1. Left Sidebar: Widget Library (Replaces ElementPalette) */}
-            <div className="w-72 bg-white dark:bg-[#2d1621] border-r border-[#f4f0f2] dark:border-[#3d2430] flex flex-col p-5 overflow-y-auto">
-                <div className="mb-6 bg-primary/10 dark:bg-primary/20 p-4 rounded-xl border border-primary/20">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-                        <p className="text-primary text-sm font-bold">Quiz hoàn tất!</p>
-                    </div>
-                    <p className="text-[#896172] dark:text-primary/60 text-xs leading-relaxed">
-                        Tất cả các tiện ích đã được mở khóa. Hãy kéo thả để trang trí món quà.
-                    </p>
-                </div>
-
-                {/* This should be the Draggable Palette Items */}
-                <div className="space-y-6">
-                    <div>
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-[#896172] mb-4">Phương tiện</h3>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div className="widget-card cursor-grab flex flex-col items-center justify-center p-3 rounded-xl bg-background-light dark:bg-[#3d2430] border border-transparent hover:border-primary transition-all">
-                                <span className="material-symbols-outlined text-primary mb-2">image</span>
-                                <span className="text-xs font-medium">Hình ảnh</span>
-                            </div>
-                            <div className="widget-card cursor-grab flex flex-col items-center justify-center p-3 rounded-xl bg-background-light dark:bg-[#3d2430] border border-transparent hover:border-primary transition-all">
-                                <span className="material-symbols-outlined text-primary mb-2">videocam</span>
-                                <span className="text-xs font-medium">Video</span>
-                            </div>
-                            {/* ... other items ... */}
-                        </div>
-                    </div>
-                </div>
-                {/* Note: The actual Drag logic needs to be connected here similar to ElementPalette */}
-            </div>
-
-            {/* 2. Center: Canvas */}
-            <section className="flex-1 bg-background-light dark:bg-background-dark overflow-y-auto p-8 flex flex-col items-center relative">
-                {/*  Navigation / Header inside builder */}
-                <div className="w-full flex justify-between items-center mb-4">
-                    <Button variant="ghost" size="sm" onClick={() => setMode(null)}>← Quay Lại</Button>
-                    <Button onClick={() => onNext({ images: [], message: "Design", theme: "simple", elements })}>
-                        Hoàn tất & Lưu
-                    </Button>
-                </div>
-
-                <div className="w-full max-w-[480px] space-y-6">
-                    {/* Step Progress Bar */}
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-sm">1</div>
-                            <span className="text-sm font-medium text-gray-900">Quiz</span>
-                        </div>
-                        <div className="h-[2px] flex-1 bg-gray-200 mx-4 relative">
-                            <div className="absolute inset-0 bg-green-500 w-full" />
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">2</div>
-                            <span className="text-sm font-bold text-gray-900">Trang trí</span>
-                        </div>
-                        <div className="h-[2px] flex-1 bg-gray-200 mx-4" />
-                        <div className="flex items-center gap-2 opacity-50">
-                            <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center font-bold text-sm">3</div>
-                            <span className="text-sm font-medium text-gray-500">Hoàn tất</span>
-                        </div>
-                    </div>
-
-                    {/* Step 1 Preview (Locked/Collapsed) */}
-                    <div className="w-full bg-white dark:bg-[#2d1621] rounded-2xl shadow-sm border border-[#e6dbe0] dark:border-[#3d2430] p-6 opacity-80">
-                        <div className="flex justify-between items-center mb-4">
-                            <span className="text-[10px] font-bold bg-green-100 text-green-600 px-2 py-1 rounded-full uppercase">Đã hoàn thành: Quiz</span>
-                            <span className="material-symbols-outlined text-gray-400 text-sm">lock</span>
-                        </div>
-                        <div className="text-center">
-                            <h4 className="font-bold text-lg mb-2">Kỷ niệm của chúng mình</h4>
-                        </div>
-                    </div>
-
-                    {/* Active Canvas Area */}
-                    {/* We need to wrap this in DigitalMemoryBuilder or pass props down */}
-                    <div className="relative w-full h-[600px] bg-white rounded-3xl shadow-sm border-2 border-dashed border-[#e6dbe0] overflow-hidden">
-                        <DigitalMemoryBuilder
-                            initialElements={elements}
-                            onChange={setElements}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            {/* 3. Right Sidebar: Properties Panel */}
-            <aside className="w-80 bg-white dark:bg-[#2d1621] border-l border-[#f4f0f2] dark:border-[#3d2430] flex flex-col">
-                <div className="p-5 border-b border-[#f4f0f2] dark:border-[#3d2430] flex items-center justify-between">
-                    <h2 className="font-bold">Tùy chỉnh Widget</h2>
-                    <span className="material-symbols-outlined text-[#896172]">settings</span>
-                </div>
-                <div className="p-5 text-center text-gray-500 text-sm">
-                    Chọn một phần tử để chỉnh sửa
-                </div>
-                {/* Properties would go here based on activeElementId from store */}
-            </aside>
+        <div className="flex-1 flex flex-col min-h-0 bg-white h-full">
+            <DigitalMemoryBuilder
+                initialElements={elements}
+                onChange={setElements}
+                onSave={(els) => onNext({
+                    images: [],
+                    message: "Design",
+                    theme: "simple",
+                    elements: els
+                })}
+            />
         </div>
     );
 }

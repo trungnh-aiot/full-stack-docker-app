@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { products } from "@/data/products";
 import { Product } from "@/types";
 
-import { Card } from "../ui/Card";
 import { DraggableProduct } from "./DraggableProduct";
 import { DroppableBox } from "./DroppableBox";
 
