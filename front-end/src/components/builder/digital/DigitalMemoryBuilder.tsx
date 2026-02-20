@@ -205,6 +205,7 @@ export function DigitalMemoryBuilder({
         setDraggedItem(null);
 
         const scale = zoom / 100;
+        const CANVAS_WIDTH = 450; // Fixed builder width
 
         // For EXISTING elements: always apply delta to reposition, no need for 'over'
         if (!active.data.current?.isNew) {
@@ -212,11 +213,18 @@ export function DigitalMemoryBuilder({
             const element = elements.find((el) => el.id === elementId);
 
             if (element) {
+                const w = element.size?.width || (element.type === 'text' ? 200 : 200);
+                const h = element.size?.height || (element.type === 'text' ? 50 : 200);
+
+                const rawX = element.position.x + (delta.x / scale);
+                const rawY = element.position.y + (delta.y / scale);
+
+                // Clamp to drop area (entire element must be inside)
+                const x = Math.round(Math.max(0, Math.min(rawX, CANVAS_WIDTH - w)));
+                const y = Math.round(Math.max(0, rawY));
+
                 updateElement(elementId, {
-                    position: {
-                        x: Math.round(element.position.x + (delta.x / scale)),
-                        y: Math.round(element.position.y + (delta.y / scale)),
-                    },
+                    position: { x, y },
                 });
             }
             return;
@@ -249,6 +257,10 @@ export function DigitalMemoryBuilder({
             x = 100;
             y = 100;
         }
+
+        // Clamp to drop area
+        x = Math.round(Math.max(0, Math.min(x, CANVAS_WIDTH - newWidth)));
+        y = Math.round(Math.max(0, y));
 
         const newElement: MemoryElement = {
             id: `element-${Date.now()}`,
