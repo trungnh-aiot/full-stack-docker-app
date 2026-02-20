@@ -47,6 +47,7 @@ import { useMemoryStore } from "@/store/useMemoryStore";
 import { ElementPalette } from "./ElementPalette";
 import { Canvas } from "./Canvas";
 import { BuilderHeader } from "./BuilderHeader";
+import { DragPreviewFactory } from './drag-previews/DragPreviewFactory';
 
 interface DigitalMemoryBuilderProps {
     initialElements?: MemoryElement[];
@@ -124,7 +125,7 @@ function DraggableSidebarItem({ item, isActive, isAssetPanelOpen, onClick }: { i
     return (
         <button
             ref={setNodeRef}
-            style={style}
+            // style={style} - Removed to keep sidebar item static
             {...listeners}
             {...attributes}
             onClick={onClick}
@@ -203,49 +204,62 @@ export function DigitalMemoryBuilder({
         setActiveElement(null);
         setDraggedItem(null);
 
-        if (!over) return;
-
         const scale = zoom / 100;
 
-        if (active.data.current?.isNew) {
-            const type = active.data.current.type;
-            const content = active.data.current.content || (type === 'text' ? "Văn bản" : "");
+        // For EXISTING elements: always apply delta to reposition, no need for 'over'
+        if (!active.data.current?.isNew) {
+            const elementId = active.id as string;
+            const element = elements.find((el) => el.id === elementId);
 
-            // Calculate drop position relative to canvas and account for zoom
-            let x = 125;
-            let y = 100;
-
-            if (active.rect.current.translated && over.rect) {
-                // Get local coordinates within the scaled canvas
-                x = Math.round((active.rect.current.translated.left - over.rect.left) / scale);
-                y = Math.round((active.rect.current.translated.top - over.rect.top) / scale);
+            if (element) {
+                updateElement(elementId, {
+                    position: {
+                        x: Math.round(element.position.x + (delta.x / scale)),
+                        y: Math.round(element.position.y + (delta.y / scale)),
+                    },
+                });
             }
-
-            const newElement: MemoryElement = {
-                id: `element-${Date.now()}`,
-                type,
-                content,
-                position: { x, y },
-                size: { width: type === 'text' ? 200 : 200, height: type === 'text' ? 50 : 150 },
-            };
-
-            addElement(newElement);
-            // Proactively set as active so properties panel appears immediately
-            setTimeout(() => setActiveElement(newElement.id), 0);
             return;
         }
 
-        const elementId = active.id as string;
-        const element = elements.find((el) => el.id === elementId);
+        // For NEW elements: require 'over' to know where the canvas is
+        if (!over) return;
 
-        if (element) {
-            updateElement(elementId, {
-                position: {
-                    x: Math.round(element.position.x + (delta.x / scale)),
-                    y: Math.round(element.position.y + (delta.y / scale)),
-                },
-            });
+        const type = active.data.current.type;
+        const content = active.data.current.content || (type === 'text' ? "Văn bản" : "");
+
+        const newWidth = type === 'text' ? 200 : 200;
+        const newHeight = type === 'text' ? 50 : 200;
+
+        let x = 0;
+        let y = 0;
+
+        if (active.rect.current?.translated && over.rect) {
+            const draggedRect = active.rect.current.translated;
+
+            const draggedCenterX = draggedRect.left + draggedRect.width / 2;
+            const draggedCenterY = draggedRect.top + draggedRect.height / 2;
+
+            const canvasCenterX = (draggedCenterX - over.rect.left) / scale;
+            const canvasCenterY = (draggedCenterY - over.rect.top) / scale;
+
+            x = Math.round(canvasCenterX - newWidth / 2);
+            y = Math.round(canvasCenterY - newHeight / 2);
+        } else {
+            x = 100;
+            y = 100;
         }
+
+        const newElement: MemoryElement = {
+            id: `element-${Date.now()}`,
+            type,
+            content,
+            position: { x, y },
+            size: { width: newWidth, height: newHeight },
+        };
+
+        addElement(newElement);
+        setTimeout(() => setActiveElement(newElement.id), 0);
     };
 
     return (
@@ -553,6 +567,107 @@ export function DigitalMemoryBuilder({
                                     </div>
                                 </PropertySection>
                             </div>
+                        ) : activeElementId && elements.find(el => el.id === activeElementId)?.type === 'image' ? (
+                            <div className="flex flex-col gap-1">
+                                <PropertySection title="Nguồn ảnh" isOpen={true}>
+                                    <div className="flex flex-col gap-3">
+                                        <div className="w-full aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200 flex items-center justify-center relative group">
+                                            {elements.find(el => el.id === activeElementId)?.content ? (
+                                                <img
+                                                    src={elements.find(el => el.id === activeElementId)?.content}
+                                                    alt="Active"
+                                                    className="w-full h-full object-contain"
+                                                />
+                                            ) : (
+                                                <div className="flex flex-col items-center gap-2 text-slate-400">
+                                                    <ImageIcon size={24} />
+                                                    <span className="text-[10px] font-bold">Chưa có ảnh</span>
+                                                </div>
+                                            )}
+
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <button className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg hover:bg-rose-50 hover:text-rose-500 transition-colors">
+                                                    Thay đổi
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase">URL Hình ảnh</label>
+                                            <input
+                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-100 rounded-lg text-xs outline-none focus:ring-2 focus:ring-rose-200 transition-all font-medium text-slate-600"
+                                                placeholder="https://..."
+                                                value={elements.find(el => el.id === activeElementId)?.content || ''}
+                                                onChange={(e) => {
+                                                    if (activeElementId) updateElement(activeElementId, { content: e.target.value });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </PropertySection>
+
+                                <PropertySection title="Kích thước & Góc">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="flex flex-col gap-2">
+                                            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">Chiều rộng</span>
+                                            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden h-9 shadow-sm">
+                                                <input className="w-full h-full bg-transparent text-center text-xs font-bold outline-none" value="200px" readOnly />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-2">
+                                            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">Chiều cao</span>
+                                            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden h-9 shadow-sm">
+                                                <input className="w-full h-full bg-transparent text-center text-xs font-bold outline-none" value="Auto" readOnly />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-3 pt-3 mt-3 border-t border-slate-100">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[13px] font-medium text-slate-600">Bo góc</span>
+                                            <div className="px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 shadow-inner">0px</div>
+                                        </div>
+                                        <div className="px-1">
+                                            <div className="h-1.5 w-full bg-slate-100 rounded-full relative shadow-inner">
+                                                <div className="absolute top-0 left-0 h-full w-0 bg-rose-400 rounded-full opacity-30 shadow-sm" />
+                                                <div className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-rose-500 rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform z-10" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PropertySection>
+
+                                <PropertySection title="Đường viền">
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div className="flex-1 flex flex-col gap-2">
+                                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">Kích thước</span>
+                                                <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden h-9 shadow-sm">
+                                                    <input className="w-full h-full bg-transparent text-center text-xs font-bold outline-none" value="0" />
+                                                </div>
+                                            </div>
+                                            <div className="flex flex-col gap-2 items-end">
+                                                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">Màu sắc</span>
+                                                <div className="w-9 h-9 rounded-xl border-2 border-white shadow-md ring-1 ring-slate-100 bg-black cursor-pointer active:scale-90 transition-transform" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PropertySection>
+
+                                <PropertySection title="Độ trong suốt">
+                                    <div className="flex flex-col gap-3">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[13px] font-medium text-slate-600">Opacity</span>
+                                            <div className="px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-600 shadow-inner">1.00</div>
+                                        </div>
+                                        <div className="px-1">
+                                            <div className="h-1.5 w-full bg-slate-100 rounded-full relative shadow-inner">
+                                                <div className="absolute top-0 left-0 h-full w-full bg-rose-400 rounded-full opacity-30 shadow-sm" />
+                                                <div className="absolute top-1/2 left-full -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-white border-2 border-rose-500 rounded-full shadow-lg cursor-pointer hover:scale-110 transition-transform z-10" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </PropertySection>
+                            </div>
                         ) : (
                             <div className="flex flex-col gap-5">
                                 <div className="flex flex-col gap-2">
@@ -595,28 +710,11 @@ export function DigitalMemoryBuilder({
                         )}
                     </aside>
                 </div>
-            </div>
+            </div >
 
             <DragOverlay dropAnimation={null}>
                 {draggedItem ? (
-                    <div className="pointer-events-none transition-transform">
-                        {draggedItem.type === 'text' ? (
-                            <div className="w-24 h-24 bg-white border-2 border-rose-500 rounded-lg flex flex-col items-center justify-center text-slate-700 shadow-2xl opacity-90 scale-95">
-                                <Type size={32} className="text-rose-500 mb-1" />
-                                <span className="text-[10px] font-bold uppercase tracking-wider">Văn bản</span>
-                            </div>
-                        ) : draggedItem.type === 'image' ? (
-                            <div className="w-24 h-24 bg-rose-50 border-2 border-rose-500 rounded-lg flex flex-col items-center justify-center text-rose-500 shadow-2xl opacity-90">
-                                <ImageIcon size={32} />
-                                <span className="text-[10px] font-bold mt-1 uppercase">Hình ảnh</span>
-                            </div>
-                        ) : (
-                            <div className="bg-white p-3 border-2 border-rose-500 rounded-lg shadow-2xl opacity-90 flex items-center gap-2">
-                                <Plus size={16} className="text-rose-500" />
-                                <span className="text-xs font-bold text-slate-700">Đang kéo...</span>
-                            </div>
-                        )}
-                    </div>
+                    <DragPreviewFactory item={draggedItem} />
                 ) : null}
             </DragOverlay>
 
@@ -636,6 +734,6 @@ export function DigitalMemoryBuilder({
                     background: #94a3b8;
                 }
             `}</style>
-        </DndContext>
+        </DndContext >
     );
 }

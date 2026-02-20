@@ -133,6 +133,7 @@ function DraggableElement({ element }: { element: MemoryElement }) {
         position: 'absolute',
         zIndex: isActive ? 100 : 10,
         opacity: isDragging ? 0.4 : 1,
+        pointerEvents: isDragging ? 'none' : undefined,
     };
 
     return (
@@ -169,6 +170,7 @@ function DraggableElement({ element }: { element: MemoryElement }) {
                                 <img
                                     src={element.content}
                                     alt="Content"
+                                    draggable={false}
                                     className="w-full h-full object-cover pointer-events-none select-none"
                                     style={{ imageRendering: 'pixelated' as any }} // or 'auto'
                                 />

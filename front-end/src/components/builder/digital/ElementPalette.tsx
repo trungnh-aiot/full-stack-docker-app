@@ -59,6 +59,8 @@ function DraggableEmoji({ emoji }: { emoji: string }) {
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         zIndex: 1000,
+        pointerEvents: (isDragging ? 'none' : undefined) as React.CSSProperties['pointerEvents'],
+        opacity: isDragging ? 0 : 1,
     } : undefined;
 
     return (
@@ -68,7 +70,7 @@ function DraggableEmoji({ emoji }: { emoji: string }) {
             {...listeners}
             {...attributes}
             className={`aspect-square flex items-center justify-center text-3xl bg-slate-50 border rounded-xl hover:bg-white hover:border-rose-400 hover:shadow-md cursor-grab active:cursor-grabbing transition-all
-                ${isDragging ? 'opacity-50 border-rose-500' : 'border-slate-100'}`}
+                ${isDragging ? 'opacity-50' : 'border-slate-100'}`}
         >
             {emoji}
         </div>
@@ -172,6 +174,8 @@ function DraggableAsset({ src, type }: { src: string, type: string }) {
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         zIndex: 1000,
+        pointerEvents: 'none' as const,
+        opacity: isDragging ? 0 : 1,
     } : undefined;
 
     return (
@@ -180,10 +184,15 @@ function DraggableAsset({ src, type }: { src: string, type: string }) {
             style={style}
             {...listeners}
             {...attributes}
-            className={`group aspect-square rounded-xl overflow-hidden border-2 bg-slate-50 cursor-grab active:cursor-grabbing transition-all hover:shadow-lg
-                ${isDragging ? 'opacity-50 ring-2 ring-rose-500 border-transparent' : 'border-slate-100 hover:border-rose-400'}`}
+            className={`group aspect-square rounded-xl overflow-hidden border-2 bg-slate-50 cursor-grab active:cursor-grabbing transition-all hover:shadow-lg touch-none
+                ${isDragging ? 'opacity-0' : 'border-slate-100 hover:border-rose-400'}`}
         >
-            <img src={src} alt="Asset" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+            <img
+                src={src}
+                alt="Asset"
+                draggable={false}
+                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+            />
         </div>
     );
 }
@@ -201,6 +210,8 @@ function DraggableTextPreset({ preset }: { preset: any }) {
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         zIndex: 1000,
+        pointerEvents: 'none' as const,
+        opacity: isDragging ? 0 : 1,
     } : undefined;
 
     return (
@@ -210,7 +221,7 @@ function DraggableTextPreset({ preset }: { preset: any }) {
             {...listeners}
             {...attributes}
             className={`w-full py-3 px-4 bg-slate-50 border rounded-xl text-left transition-all hover:bg-white hover:border-rose-400 hover:shadow-sm cursor-grab active:cursor-grabbing
-                ${isDragging ? 'opacity-50 border-rose-500' : 'border-slate-200'}`}
+                ${isDragging ? 'opacity-0' : 'border-slate-200'}`}
         >
             <span className={`${preset.style} text-slate-800`}>{preset.label}</span>
         </div>
@@ -230,6 +241,8 @@ function DraggableTextCombination({ combo }: { combo: any }) {
     const style = transform ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
         zIndex: 1000,
+        pointerEvents: 'none' as const,
+        opacity: isDragging ? 0 : 1,
     } : undefined;
 
     return (
@@ -239,7 +252,7 @@ function DraggableTextCombination({ combo }: { combo: any }) {
             {...listeners}
             {...attributes}
             className={`p-4 border rounded-xl hover:border-rose-400 hover:shadow-sm transition-all cursor-grab active:cursor-grabbing bg-slate-50/50
-                ${isDragging ? 'opacity-50 border-rose-500' : 'border-slate-100'}`}
+                ${isDragging ? 'opacity-0' : 'border-slate-100'}`}
         >
             {combo.title === 'Wedding Day' ? (
                 <>
