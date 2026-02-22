@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import { MemoryElement } from "@/types";
 import { useMemoryStore } from "@/store/useMemoryStore";
-import { ElementPalette } from "./ElementPalette";
+import { ElementPalette } from "./element-plattes/ElementPalette";
 import { Canvas } from "./Canvas";
 import { BuilderHeader } from "./BuilderHeader";
 import { DragPreviewFactory } from './drag-previews/DragPreviewFactory';
@@ -130,7 +130,7 @@ function DraggableSidebarItem({ item, isActive, isAssetPanelOpen, onClick }: { i
             {...attributes}
             onClick={onClick}
             className={`w-14 h-14 flex flex-col items-center justify-center rounded-xl transition-all duration-200 gap-1 relative
-                ${isActive && (item.id !== 'text' || isAssetPanelOpen)
+                ${isActive
                     ? 'bg-rose-50 text-rose-600 shadow-sm'
                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'} 
                 ${isDragging ? 'opacity-50 ring-2 ring-rose-500' : ''}`}
@@ -293,17 +293,14 @@ export function DigitalMemoryBuilder({
                                 isActive={activeTab === item.id}
                                 isAssetPanelOpen={isAssetPanelOpen}
                                 onClick={() => {
-                                    if (activeTab === item.id) {
-                                        if (item.id !== 'text') {
-                                            setIsAssetPanelOpen(!isAssetPanelOpen);
-                                        }
+                                    if (item.id === 'text') {
+                                        setActiveTab('text');
+                                        setIsAssetPanelOpen(false);
+                                    } else if (activeTab === item.id) {
+                                        setIsAssetPanelOpen(!isAssetPanelOpen);
                                     } else {
                                         setActiveTab(item.id);
-                                        if (item.id !== 'text') {
-                                            setIsAssetPanelOpen(true);
-                                        } else {
-                                            setIsAssetPanelOpen(false);
-                                        }
+                                        setIsAssetPanelOpen(true);
                                     }
                                 }}
                             />
@@ -315,9 +312,11 @@ export function DigitalMemoryBuilder({
                         className={`bg-white overflow-hidden flex flex-col z-20 transition-all duration-300
                             ${isAssetPanelOpen && activeTab !== 'text' ? 'w-[320px]' : 'w-0'}`}
                     >
-                        <div className="w-[320px] h-full flex flex-col border-r border-gray-300">
-                            <ElementPalette activeTab={activeTab} />
-                        </div>
+                        {isAssetPanelOpen && activeTab !== 'text' && (
+                            <div className="w-[320px] h-full flex flex-col border-r border-gray-300">
+                                <ElementPalette activeTab={activeTab} />
+                            </div>
+                        )}
                         {/* Toggle Panel Button - Hidden for text tab as requested */}
                         {activeTab !== 'text' && (
                             <button
