@@ -5,6 +5,7 @@ import { MemoryElement } from '@/types';
 interface MemoryDocumentState {
     elements: MemoryElement[];
     activeElementId: string | null;
+    replacementElementId: string | null;
     // Metadata for collaboration
     collaborators: { id: string; name: string; color: string; cursor?: { x: number; y: number } }[];
 }
@@ -13,6 +14,7 @@ interface MemoryDocumentState {
 interface MemoryActions {
     // Local UI Actions
     setActiveElement: (id: string | null) => void;
+    setReplacementElementId: (id: string | null) => void;
 
     // Document Actions (Synced)
     addElement: (element: MemoryElement) => void;
@@ -30,10 +32,12 @@ export const useMemoryStore = create<MemoryDocumentState & MemoryActions>((set) 
     // Initial State
     elements: [],
     activeElementId: null,
+    replacementElementId: null,
     collaborators: [],
 
     // Actions
     setActiveElement: (id) => set({ activeElementId: id }),
+    setReplacementElementId: (id) => set({ replacementElementId: id }),
 
     addElement: (element) =>
         set((state) => ({

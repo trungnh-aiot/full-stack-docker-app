@@ -155,24 +155,43 @@ function DraggableElement({ element }: { element: MemoryElement }) {
                     }`}
             >
                 {/* Content Renderers */}
-                <div className="overflow-hidden rounded-[inherit]">
+                <div className="overflow-hidden rounded-[inherit]" style={{ transform: element.rotation ? `rotate(${element.rotation}deg)` : undefined }}>
                     {element.type === 'text' && (
-                        <div className="p-2 min-w-[50px] whitespace-pre-wrap">
-                            <p className="text-slate-800 leading-tight outline-none focus:ring-0" contentEditable suppressContentEditableWarning>
+                        <div
+                            className="p-2 min-w-[50px] whitespace-pre-wrap"
+                            style={element.style as React.CSSProperties}
+                        >
+                            <p
+                                className="leading-tight outline-none focus:ring-0"
+                                contentEditable
+                                suppressContentEditableWarning
+                            >
                                 {element.content}
                             </p>
                         </div>
                     )}
 
+                    {element.type === 'sticker' && (
+                        <div className="flex items-center justify-center text-4xl p-2 select-none" style={element.style as React.CSSProperties}>
+                            {element.content}
+                        </div>
+                    )}
+
                     {element.type === 'image' && (
-                        <div className="w-[200px] h-[150px] bg-slate-100 flex items-center justify-center text-slate-300 rounded shadow-inner overflow-hidden">
+                        <div
+                            className="bg-slate-100 flex items-center justify-center text-slate-300 rounded shadow-inner overflow-hidden"
+                            style={{
+                                width: element.size?.width || 200,
+                                height: element.size?.height || 200,
+                                ...(element.style as React.CSSProperties)
+                            }}
+                        >
                             {element.content ? (
                                 <img
                                     src={element.content}
                                     alt="Content"
                                     draggable={false}
                                     className="w-full h-full object-cover pointer-events-none select-none"
-                                    style={{ imageRendering: 'pixelated' as any }} // or 'auto'
                                 />
                             ) : (
                                 <ImageIcon size={32} />

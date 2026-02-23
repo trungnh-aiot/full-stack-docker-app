@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core';
 
-export function DraggableAsset({ src, type }: { src: string, type: string }) {
+export function DraggableAsset({ src, type, onClick }: { src: string, type: string, onClick?: () => void }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: `asset-${src}`,
         data: {
@@ -23,6 +23,9 @@ export function DraggableAsset({ src, type }: { src: string, type: string }) {
             style={style}
             {...listeners}
             {...attributes}
+            onClick={() => {
+                if (!isDragging) onClick?.();
+            }}
             className={`group aspect-square rounded-xl overflow-hidden border-2 bg-slate-50 cursor-grab active:cursor-grabbing transition-all hover:shadow-lg touch-none
                 ${isDragging ? 'opacity-0' : 'border-slate-100 hover:border-rose-400'}`}
         >

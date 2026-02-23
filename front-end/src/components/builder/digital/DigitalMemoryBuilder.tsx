@@ -164,10 +164,10 @@ export function DigitalMemoryBuilder({
     const setActiveElement = useMemoryStore((state) => state.setActiveElement);
     const activeElementId = useMemoryStore((state) => state.activeElementId);
 
-    // Effect to auto-select text tab or handle panel visibility
+    // Simplified effect for panel visibility
     useEffect(() => {
-        if (activeTab === 'text') {
-            setIsAssetPanelOpen(false); // Hide the middle panel for text tab
+        if (activeTab !== 'text' && !isAssetPanelOpen) {
+            setIsAssetPanelOpen(true);
         }
     }, [activeTab]);
 
@@ -285,7 +285,7 @@ export function DigitalMemoryBuilder({
 
                 <div className="flex flex-1 overflow-hidden relative">
                     {/* Left Icon Sidebar */}
-                    <aside className="w-24 bg-white flex flex-col items-center py-4 gap-2 z-30 shrink-0">
+                    <aside className="w-24 bg-white flex flex-col items-center py-4 gap-2 z-30 shrink-0 border-r border-gray-200">
                         {SIDEBAR_ITEMS.map((item) => (
                             <DraggableSidebarItem
                                 key={item.id}
@@ -293,10 +293,7 @@ export function DigitalMemoryBuilder({
                                 isActive={activeTab === item.id}
                                 isAssetPanelOpen={isAssetPanelOpen}
                                 onClick={() => {
-                                    if (item.id === 'text') {
-                                        setActiveTab('text');
-                                        setIsAssetPanelOpen(false);
-                                    } else if (activeTab === item.id) {
+                                    if (activeTab === item.id) {
                                         setIsAssetPanelOpen(!isAssetPanelOpen);
                                     } else {
                                         setActiveTab(item.id);
@@ -309,23 +306,21 @@ export function DigitalMemoryBuilder({
 
                     {/* Secondary Asset Panel */}
                     <div
-                        className={`bg-white overflow-hidden flex flex-col z-20 transition-all duration-300
-                            ${isAssetPanelOpen && activeTab !== 'text' ? 'w-[320px]' : 'w-0'}`}
+                        className={`bg-white overflow-hidden flex flex-col z-20 transition-all duration-300 relative
+                            ${isAssetPanelOpen ? 'w-[320px] border-r border-gray-200' : 'w-0'}`}
                     >
-                        {isAssetPanelOpen && activeTab !== 'text' && (
-                            <div className="w-[320px] h-full flex flex-col border-r border-gray-300">
+                        {isAssetPanelOpen && (
+                            <div className="w-[320px] h-full flex flex-col">
                                 <ElementPalette activeTab={activeTab} />
                             </div>
                         )}
-                        {/* Toggle Panel Button - Hidden for text tab as requested */}
-                        {activeTab !== 'text' && (
-                            <button
-                                onClick={() => setIsAssetPanelOpen(!isAssetPanelOpen)}
-                                className="absolute -right-4 top-1/2 -translate-y-1/2 w-4 h-12 bg-white border border-l-0 rounded-r-lg flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors z-30"
-                            >
-                                {isAssetPanelOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
-                            </button>
-                        )}
+                        {/* Toggle Panel Button */}
+                        <button
+                            onClick={() => setIsAssetPanelOpen(!isAssetPanelOpen)}
+                            className="absolute -right-4 top-1/2 -translate-y-1/2 w-4 h-12 bg-white border border-l-0 rounded-r-lg flex items-center justify-center text-slate-400 hover:text-rose-600 transition-colors z-30 shadow-sm"
+                        >
+                            {isAssetPanelOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
+                        </button>
                     </div>
 
                     {/* Main Canvas Workspace */}
@@ -597,7 +592,16 @@ export function DigitalMemoryBuilder({
                                             )}
 
                                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                <button className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg hover:bg-rose-50 hover:text-rose-500 transition-colors">
+                                                <button
+                                                    className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg hover:bg-rose-50 hover:text-rose-500 transition-colors"
+                                                    onClick={() => {
+                                                        if (activeElementId) {
+                                                            useMemoryStore.getState().setReplacementElementId(activeElementId);
+                                                            setActiveTab('image');
+                                                            setIsAssetPanelOpen(true);
+                                                        }
+                                                    }}
+                                                >
                                                     Thay đổi
                                                 </button>
                                             </div>
